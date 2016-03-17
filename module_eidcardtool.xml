@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_eidcardtool" default="compile.module.eidcardtool">
+  <dirname property="module.eidcardtool.basedir" file="${ant.file.module_eidcardtool}"/>
+  
+  
+  <property name="compiler.args.eidcardtool" value="-encoding UTF-8 -source 1.6 -target 1.6 ${compiler.args}"/>
+  
+  <property name="eidcardtool.output.dir" value="${module.eidcardtool.basedir}/out/production/eIDCardTool"/>
+  <property name="eidcardtool.testoutput.dir" value="${module.eidcardtool.basedir}/out/test/eIDCardTool"/>
+  
+  <path id="eidcardtool.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="eidcardtool.module.production.classpath">
+    <path refid="library.eidcardtool.classpath"/>
+  </path>
+  
+  <path id="eidcardtool.runtime.production.module.classpath">
+    <pathelement location="${eidcardtool.output.dir}"/>
+    <path refid="library.eidcardtool.classpath"/>
+  </path>
+  
+  <path id="eidcardtool.module.classpath">
+    <pathelement location="${eidcardtool.output.dir}"/>
+    <path refid="library.eidcardtool.classpath"/>
+  </path>
+  
+  <path id="eidcardtool.runtime.module.classpath">
+    <pathelement location="${eidcardtool.testoutput.dir}"/>
+    <pathelement location="${eidcardtool.output.dir}"/>
+    <path refid="library.eidcardtool.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.eidcardtool">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.eidcardtool">
+    <patternset refid="excluded.from.module.eidcardtool"/>
+  </patternset>
+  
+  <path id="eidcardtool.module.sourcepath">
+    <dirset dir="${module.eidcardtool.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.eidcardtool" depends="compile.module.eidcardtool.production,compile.module.eidcardtool.tests" description="Compile module eIDCardTool"/>
+  
+  <target name="compile.module.eidcardtool.production" description="Compile module eIDCardTool; production classes">
+    <mkdir dir="${eidcardtool.output.dir}"/>
+    <javac destdir="${eidcardtool.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.eidcardtool}"/>
+      <bootclasspath refid="eidcardtool.module.bootclasspath"/>
+      <classpath refid="eidcardtool.module.production.classpath"/>
+      <src refid="eidcardtool.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.eidcardtool"/>
+    </javac>
+    
+    <copy todir="${eidcardtool.output.dir}">
+      <fileset dir="${module.eidcardtool.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.eidcardtool.tests" depends="compile.module.eidcardtool.production" description="compile module eIDCardTool; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.eidcardtool" description="cleanup module">
+    <delete dir="${eidcardtool.output.dir}"/>
+    <delete dir="${eidcardtool.testoutput.dir}"/>
+  </target>
+</project>
